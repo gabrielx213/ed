@@ -6,12 +6,12 @@ public class Fila {
     public int Tail;
 
     public Fila(int tam) {
-        this.Data = new int[tam];
-        this.Head = this.Tail = -1;
+        this.Data = new int[tam+1]; //Uma posição a mais do que a pedida, esta não será usada
+        this.Head = this.Tail = 0;
     }
 
     public boolean QueueEmpty() {
-        if (this.Head == -1) {
+        if (this.Head == this.Tail) {
             return true;
         } else {
             return false;
@@ -19,8 +19,7 @@ public class Fila {
     }
 
     public boolean QueueFull() {
-        if ((this.Tail == this.Data.length-1 && this.Head == 0) || 
-            (this.Tail == (this.Head -1) % (this.Data.length - 1))) {
+        if ((this.Tail + 1) % this.Data.length == this.Head) {
             return true;
         } else {
             return false;
@@ -30,17 +29,14 @@ public class Fila {
     public void Enqueue(int dado) throws Exception {
         if (this.QueueFull()) {
             throw new Exception("Fila cheia");
-        }
-        if (this.QueueEmpty()) {
-            this.Tail = this.Head = 0;
         } else {
-            if (this.Tail == this.Data.length-1 && this.Head != 0) { //Contorno circular
+            this.Data[this.Tail] = dado;
+            if (this.Tail == this.Data.length-1) { //Contorno circular
                 this.Tail = 0;
             } else {
                 this.Tail++; //Caso normal
             }
         }
-        this.Data[this.Tail] = dado;
     }
 
     public int Dequeue() throws Exception {
@@ -48,9 +44,7 @@ public class Fila {
             throw new Exception("Fila vazia");
         }
         int dado = this.Data[this.Head];
-        if (this.Tail == this.Head) { //Caso de um elemento único
-            this.Tail = this.Head = -1;
-        } else if (this.Head == this.Data.length-1) { //Contorno circular
+        if (this.Head == this.Data.length-1) { //Contorno circular
             this.Head = 0;
         } else {
             this.Head++;
