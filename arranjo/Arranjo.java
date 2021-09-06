@@ -17,9 +17,7 @@ public class Arranjo<T> {
     public void Set(int i, T obj) {
         this.Data[i] = obj;
     }
-    public int Tam(){
-        return this.Data.length;
-    }
+    
     public void Imprime() {
         System.out.print("[");
         for (int i=0; i < this.Data.length; i++) {
@@ -27,7 +25,10 @@ public class Arranjo<T> {
         }
         System.out.println("]");
     }
-    
+
+    public int Tam(){
+        return this.Data.length;
+    }
 
     public void a(T obj) {
         if (this.Get(this.Tam()-1) == null){

@@ -18,9 +18,22 @@ public class Pilha {
         }
     }
 
+    public boolean StackFull() {
+        if (this.Topo == this.Dados.length-1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public void Push(int dado) {
-        this.Topo += 1;
-        this.Dados[this.Topo] = dado;
+        if (this.StackFull() == false){
+            this.Topo += 1;
+            this.Dados[this.Topo] = dado;
+        }
+        else {
+            System.out.println("A pilha está cheia");
+        }
     }
 
     public int Pop() throws Exception {
