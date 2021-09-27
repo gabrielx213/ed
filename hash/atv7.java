@@ -128,7 +128,7 @@ public class atv7 {
     System.out.printf("O desvio padrão em lista encadeada foi: %f\n", dp_ll);    
 
     //Tempos de execução
-    System.out.printf("A diferença de tempo de execuçao dos processos foi de: %s s\n", (tempo_ll-tempo_hash)/1000);
+    System.out.printf("\nA diferença de tempo de execuçao dos processos foi de: %s s\n", (tempo_ll-tempo_hash)/1000);
     System.out.printf(" Lista encadeada   |   Tabela hash\n       %s s               %s s", tempo_ll/1000, tempo_hash/1000);
   }
 }
