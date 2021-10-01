@@ -1,0 +1,64 @@
+class Grafo:
+    #contrutor da classe grafo
+    def __init__(self, vertices, eh_ponderado):     #Função que é automaticamente realizada ao criar o objeto da classe Grafo
+        self.vertices = vertices              #Atribui ao objeto criado a propriedade vertices
+        self.eh_ponderado = eh_ponderado      #Atribui ao objeto a sua ponderabilidade
+        self.arestas = [[] for vertice in range(self.vertices)]     #Atribui ao objeto criado um array(arestas) composto por arrays(uma matriz)
+    def print(self):
+        for i in range(self.vertices - 1):
+            print(f"No vértice {i} temos as arestas (destino, valor):{self.arestas[i]}\n")
+    def insere_Aresta(self, orig, dest, peso, ehDigrafo):                       #Função para inserir aresta ao objeto (self, origem, destino, peso, digrafo?)
+        if self.vertices == 0:                                                  #Verifica se o Grafo é válido
+            return
+        if orig < 0 or orig>=self.vertices or dest<0 or dest>=self.vertices:    #verifica se a aresta é válida
+            return
+        if self.eh_ponderado:                                                   #Caso o grafo seja ponderado
+            self.arestas[orig].append([dest, peso])                             #Adiciona ao array arestas[origem] o array [destino, peso]
+                                                                                #Tal que o elemento fique na forma arestas[origem]->[destino, peso]
+            if not ehDigrafo:                                                   #Caso NÂO seja digrafo, o processo de repete simetricamente
+                self.arestas[dest].append([orig, peso])
+        else:                                                                   #Caso o grafo não seja ponderado
+            self.arestas[orig].append(dest)                                     #Adiciona ao array arestas[origem] o array [destino]
+            if not ehDigrafo:                                                   #Caso NÃO seja digrafo, o processo de repete simetricamente
+                self.arestas[dest].append(orig)
+
+    def remove_Aresta(self, orig, dest, ehDigrafo):
+        if self.vertices == 0:                                                      #Verifica se o Grafo é válido
+            return
+        if orig < 0 or orig >= self.vertices or dest < 0 or dest >= self.vertices:  #verifica se a aresta é válida
+            return
+        if not self.eh_ponderado:                                                   #Caso o grafo não seja ponderado
+            j=0
+            while self.arestas[orig][j] != dest:                                    #Procura a aresta no array arestas[origem] o item destino
+              j += 1
+              if j>= len(self.arestas[orig]):                                       #Caso não seja encontrado, exibe a mensagem:
+                print("Aresta não encontrada!\n")
+                return
+            del self.arestas[orig][j]                                               #Remove a aresta do grafo
+            if not ehDigrafo:                                                       # Caso NÃO seja digrafo, o processo se repete simetricamente
+                self.remove_Aresta(dest, orig, True)
+        else:                                           #Caso o grafo seja ponderado
+            j = 0
+            while self.arestas[orig][j][0] != dest:     #Procura o a aresta por meio do item destino(posição 0 do subarray) no array do vertice de origem
+                j += 1
+                if j >= len(self.arestas[orig]):        #Caso não ache, mostra a mensagem de erro.
+                    print("Aresta não encontrada!\n")
+                    return
+            del self.arestas[orig][j]                   #Remove a aresta do grafo
+            if not ehDigrafo:                           # Caso NÃO seja digrafo, o processo se repete simetricamente
+                self.remove_Aresta(dest, orig, True)
+
+# Testes
+gr = Grafo(5, True)
+
+gr.insere_Aresta(0, 1, 1, True)    
+gr.insere_Aresta(1, 2, 2, True)
+gr.insere_Aresta(1, 3, 3, True)
+gr.insere_Aresta(2, 3, 5, True)
+gr.insere_Aresta(3, 4, 1, True)
+
+gr.remove_Aresta(1, 4, True)
+
+gr.print()
+
+del gr
