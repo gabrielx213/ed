@@ -48,17 +48,35 @@ class Grafo:
             if not ehDigrafo:                           # Caso NÃO seja digrafo, o processo se repete simetricamente
                 self.remove_Aresta(dest, orig, True)
 
-# Testes
-gr = Grafo(5, True)
+def minDist(distancia, visitados):
+    min = float('inf')      # inicia o min com o maior valor possivel
+    min_index = 0           # posição do vértice que tem a menor distância
 
-gr.insere_Aresta(0, 1, 1, True)    
-gr.insere_Aresta(1, 2, 2, True)
-gr.insere_Aresta(1, 3, 3, True)
-gr.insere_Aresta(2, 3, 5, True)
-gr.insere_Aresta(3, 4, 1, True)
+    # Laço que percorre o vetor de distância
+    for v in range(len(distancia)):
+        if distancia[v] < min and visitados[v] == False:     # condição para achar a menor distância
+            min = distancia[v]       # atualiza o minímo
+            min_index = v
+    return min_index            # retorna a posição do vértice com a menor distância
 
-gr.remove_Aresta(1, 4, True)
-
-gr.print()
-
-del gr
+def buscaMenorCaminho(grafo, inicio):
+    distancia = [float('inf')] * grafo.vertices  # inicia a distância de todos os vertices
+    distancia[inicio] = 0                        # define a distância até o inicio
+    visitados = [False] * grafo.vertices         # lista de visitados inicia com nenhum vértice visitado
+    
+    # Laço que percorre o grafo
+    for x in range(grafo.vertices):
+        u = minDist(distancia, visitados)       # define o vértice com menor distância, baseado nos vértice visitados
+        for v in range(grafo.vertices):         # repetição de comandos com base na quantidade de vértices do grafo
+            for i in range(grafo.vertices):     # laço para percorrer os elementos do grafo
+                for j in grafo.arestas[i]:
+                    if grafo.eh_ponderado == True:      # cada elemento do grafo é uma lista com os vizinhos do vertice  
+                        if u == i and j[0] == v:    # se a posição atual for a de menor distância e o proximo vértice é o atual do laço anterior, continua
+                            if j[1] > 0 and visitados[v] == False and distancia[v] > distancia[u] + j[1]:     # condição para contabilizar a distância, j[1] é o peso da aresta
+                                distancia[v] = distancia[u] + j[1]
+                    else:                        # caso não ponderado
+                        if u == i and j == v:    # se a posição atual for a de menor distância e o proximo vértice é o atual do laço anterior, continua
+                            if j+1 > 0 and visitados[v] == False and distancia[v] > distancia[u] + j+1:     # condição para contabilizar a distância
+                                distancia[v] = distancia[u] + 1    
+        visitados[u] = True     # Define o vértice com menor distância como visitado
+    return distancia            # retorna as distâncias
