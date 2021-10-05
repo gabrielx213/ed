@@ -1,12 +1,11 @@
+import pandas
+
 class Grafo:
     #contrutor da classe grafo
     def __init__(self, vertices, eh_ponderado):     #Função que é automaticamente realizada ao criar o objeto da classe Grafo
         self.vertices = vertices              #Atribui ao objeto criado a propriedade vertices
         self.eh_ponderado = eh_ponderado      #Atribui ao objeto a sua ponderabilidade
         self.arestas = [[] for vertice in range(self.vertices)]     #Atribui ao objeto criado um array(arestas) composto por arrays(uma matriz)
-    def print(self):
-        for i in range(self.vertices - 1):
-            print(f"No vértice {i} temos as arestas (destino, valor):{self.arestas[i]}\n")
     def insere_Aresta(self, orig, dest, peso, ehDigrafo):                       #Função para inserir aresta ao objeto (self, origem, destino, peso, digrafo?)
         if self.vertices == 0:                                                  #Verifica se o Grafo é válido
             return
@@ -47,36 +46,45 @@ class Grafo:
             del self.arestas[orig][j]                   #Remove a aresta do grafo
             if not ehDigrafo:                           # Caso NÃO seja digrafo, o processo se repete simetricamente
                 self.remove_Aresta(dest, orig, True)
+    def printSolucao(self, dist):
+        headers = []
+        for i in range(self.vertices):
+            headers.append(i)
+        print(pandas.DataFrame(dist, headers, headers))
 
-def minDist(distancia, visitados):
-    min = float('inf')      # inicia o min com o maior valor possivel
-    min_index = 0           # posição do vértice que tem a menor distância
+    def minDist(self, distancia, visitados):
+        min = float('inf')      # inicia o min com o maior valor possivel
+        min_index = 0           # posição do vértice que tem a menor distância
 
-    # Laço que percorre o vetor de distância
-    for v in range(len(distancia)):
-        if distancia[v] < min and visitados[v] == False:     # condição para achar a menor distância
-            min = distancia[v]       # atualiza o minímo
-            min_index = v
-    return min_index            # retorna a posição do vértice com a menor distância
+        # Laço que percorre o vetor de distância
+        for v in range(len(distancia)):
+            if distancia[v] < min and visitados[v] == False:     # condição para achar a menor distância
+                min = distancia[v]       # atualiza o minímo
+                min_index = v
+        return min_index            # retorna a posição do vértice com a menor distância
+    def buscaMenorCaminho(grafo):
+        distancia = []
+        visitados = []
+        for i in range(grafo.vertices):    
+            distancia.append([float('inf')] * grafo.vertices)
+            visitados.append([False] * grafo.vertices)         # lista de visitados inicia com nenhum vértice visitado
+            distancia[i][i] = 0               # define a distância até os inicios como 0
+        # Laço que percorre o grafo
+        for vertice in range(grafo.vertices):
+            for x in range(grafo.vertices):
+                u = grafo.minDist(distancia[vertice], visitados[vertice])       # define o vértice com menor distância, baseado nos vértice visitados
+                for v in range(grafo.vertices):         # repetição de comandos com base na quantidade de vértices do grafo
+                    for i in range(grafo.vertices):     # laço para percorrer os elementos do grafo
+                        for j in grafo.arestas[i]:
+                            if grafo.eh_ponderado == True:      # cada elemento do grafo é uma lista com os vizinhos do vertice  
+                                if u == i and j[0] == v:    # se a posição atual for a de menor distância e o proximo vértice é o atual do laço anterior, continua
+                                    if j[1] > 0 and visitados[vertice][v] == False and distancia[vertice][v] > distancia[vertice][u] + j[1]:     # condição para contabilizar a distância, j[1] é o peso da aresta
+                                        distancia[vertice][v] = distancia[vertice][u] + j[1]
+                            else:                        # caso não ponderado
+                                if u == i and j == v:    # se a posição atual for a de menor distância e o proximo vértice é o atual do laço anterior, continua
+                                    if j+1 > 0 and visitados[vertice][v] == False and distancia[vertice][v] > distancia[vertice][u] + j+1:     # condição para contabilizar a distância
+                                        distancia[vertice][v] = distancia[vertice][u] + 1    
+                visitados[vertice][u] = True     # Define o vértice com menor distância como visitado
+        grafo.printSolucao(distancia)
+        return distancia            # retorna as distâncias
 
-def buscaMenorCaminho(grafo, inicio):
-    distancia = [float('inf')] * grafo.vertices  # inicia a distância de todos os vertices
-    distancia[inicio] = 0                        # define a distância até o inicio
-    visitados = [False] * grafo.vertices         # lista de visitados inicia com nenhum vértice visitado
-    
-    # Laço que percorre o grafo
-    for x in range(grafo.vertices):
-        u = minDist(distancia, visitados)       # define o vértice com menor distância, baseado nos vértice visitados
-        for v in range(grafo.vertices):         # repetição de comandos com base na quantidade de vértices do grafo
-            for i in range(grafo.vertices):     # laço para percorrer os elementos do grafo
-                for j in grafo.arestas[i]:
-                    if grafo.eh_ponderado == True:      # cada elemento do grafo é uma lista com os vizinhos do vertice  
-                        if u == i and j[0] == v:    # se a posição atual for a de menor distância e o proximo vértice é o atual do laço anterior, continua
-                            if j[1] > 0 and visitados[v] == False and distancia[v] > distancia[u] + j[1]:     # condição para contabilizar a distância, j[1] é o peso da aresta
-                                distancia[v] = distancia[u] + j[1]
-                    else:                        # caso não ponderado
-                        if u == i and j == v:    # se a posição atual for a de menor distância e o proximo vértice é o atual do laço anterior, continua
-                            if j+1 > 0 and visitados[v] == False and distancia[v] > distancia[u] + j+1:     # condição para contabilizar a distância
-                                distancia[v] = distancia[u] + 1    
-        visitados[u] = True     # Define o vértice com menor distância como visitado
-    return distancia            # retorna as distâncias
