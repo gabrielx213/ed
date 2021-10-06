@@ -74,9 +74,12 @@ g.insere_Aresta(3, 4, 1, True)
 
 g.insere_Aresta(4, 1, 1, True)
 
-Saída:
+Saída: 
 
 ![image](https://user-images.githubusercontent.com/80348569/136141735-22f0ee50-391b-4aa4-8431-7e487128cecd.png)
 
 
-3) O problema é facilmente aplicado na prática quando trazemos o conceito de acharmos o menor caminho entre dois lugares. Imagine que queremos poupar tempo indo de um lugar da cidade ao outro, no entanto, teríamos que primeiro visualiazar o mapa da cidade, para sabermos em que lugar estamos e quais ruas iríamos usar para chegar no menor tempo possível ao nosso objetivo. Mas, vale ressaltar que, nessas ruas, existem fluxo de tráfego (que pode ser ligado diretamente ao peso de um grafo) que também devem ser levados em consideração.
+3) O problema é facilmente aplicado na prática quando trazemos o conceito de acharmos o menor caminho entre dois lugares. Imagine que queremos poupar tempo indo de um lugar da cidade ao outro, no entanto, teríamos que primeiro visualiazar o mapa da cidade, para sabermos em que lugar estamos e quais ruas iríamos usar para chegar no menor tempo possível ao nosso objetivo. Mas, vale ressaltar que, nessas ruas, existem fluxo de tráfego (que pode ser ligado diretamente ao peso de um grafo) que também devem ser levados em consideração
+
+
+4) o algoritmo se baseia no algoritmo de Dijkstra, no qual , é escolhido um vértice como raiz da busca, este algoritmo calcula o valor mínimo deste vértice para todos os demais vértices do grafo. O algoritmo pode ser usado sobre grafos orientados (dígrafos), ou não, e admite que todas as arestas possuem pesos não negativos (nulo é possível),o algoritmo desenvolvido é diferente, poís ao invés de se basear em relação a origem, o nosso algoritmo pega entre todos os vertices. 
